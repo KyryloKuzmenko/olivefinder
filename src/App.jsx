@@ -6,11 +6,26 @@ import MapPage from "./pages/MapPage/MapPage";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 
 import "./App.css";
+import { useDispatch, useSelector } from "react-redux";
+import { selectIsRefreshing } from "./redux/auth/selectors";
+import { useEffect } from "react";
+import { refresh } from "./redux/auth/operations";
 
 function App() {
+  const dispatch = useDispatch();
+  const isRefreshing = useSelector(selectIsRefreshing);
+
+  useEffect(() => {
+    dispatch(refresh());
+  }, [dispatch]);
+
+  if (isRefreshing) {
+    return <p>Loading...</p>; // Показываем загрузку, пока идёт рефреш
+  }
+
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="login" />} />
+      <Route path="/" element={<Navigate to="/map" />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route

@@ -3,8 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useDispatch } from "react-redux";
 
-// import { signIn } from "../../services/api";
-
 import { signIn } from "../../redux/auth/operations";
 import { SignInValidationSchema } from "../../services/validationSchema";
 
@@ -12,7 +10,7 @@ import styles from "./LoginPage.module.css";
 
 
 const LoginPage = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [error, setError] = useState("");
 
@@ -23,8 +21,7 @@ const LoginPage = () => {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      const response = await dispatch(signIn(values)).unwrap();
-      localStorage.setItem("token", response.token);
+      await dispatch(signIn(values)).unwrap();
       navigate("/map");
     } catch (error) {
       setError(error || "Invalid credentials");

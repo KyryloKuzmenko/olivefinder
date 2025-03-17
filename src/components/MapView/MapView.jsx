@@ -10,7 +10,6 @@ import styles from "./MapView.module.css";
 const MapView = () => {
   const [olives, setOlives] = useState([]);
   const [userLocation, setUserLocation] = useState(null);
-  const token = localStorage.getItem("token");
 
   // 1) Определяем геолокацию пользователя
   useEffect(() => {
@@ -36,7 +35,7 @@ const MapView = () => {
   // 2) Загружаем маркеры с бэкенда
   const fetchOlives = async () => {
     try {
-      const { data } = await getOlives(token);
+      const { data } = await getOlives();
       setOlives(data.data);
     } catch (error) {
       console.error("Error fetching olives:", error);
@@ -49,13 +48,13 @@ const MapView = () => {
     const interval = setInterval(fetchOlives, 12000);
 
     return () => clearInterval(interval);
-  }, [token]);
+  }, []);
 
   // 3) Обработка двойного клика: добавляем новый маркер
   const handleMapDblClick = async (e) => {
     const { lat, lng } = e.latlng;
     try {
-      const { data } = await addOlive(token, {
+      const { data } = await addOlive({
         location: {
           type: "Point",
           coordinates: [lng, lat],

@@ -3,9 +3,7 @@ import axios from "axios";
 
 import { API_URL } from "../../config/config";
 
-const setAuthHeader = (token) => {
-  axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-};
+axios.defaults.withCredentials = true;
 
 // register user
 export const signUp = createAsyncThunk(
@@ -13,8 +11,7 @@ export const signUp = createAsyncThunk(
   async (userData, thunkApi) => {
     try {
       const response = await axios.post(`${API_URL}/sign-up`, userData);
-      const token = response.data.data.token;
-      setAuthHeader(token);
+
       return response.data.data;
     } catch (error) {
       return thunkApi.rejectWithValue(
@@ -32,8 +29,6 @@ export const signIn = createAsyncThunk(
   async (userData, thunkApi) => {
     try {
       const response = await axios.post(`${API_URL}/sign-in`, userData);
-      const token = response.data.data.token;
-      setAuthHeader(token);
       return response.data.data;
     } catch (error) {
       return thunkApi.rejectWithValue(
@@ -45,7 +40,34 @@ export const signIn = createAsyncThunk(
 // ================================
 
 
+// =====sign-out=====
+
+export const signOut = createAsyncThunk("auth/sign-out", async (_, thunkApi) => {
+  try {
+    await axios.post(`${API_URL}/sign-out`);
+    return null;
+  } catch (error) {
+    return thunkApi.rejectWithValue(
+        error.response?.data?.message || "Logout failed. Try again"
+      );
+  }
+})
+
+// ================================
+
+
 // refresh
+
+export const refresh = createAsyncThunk("auth/refreshUser", async (_, thunkApi) => {
+  try {
+    const response = await axios.get(`${API_URL}/refresh`);
+    return response.data.data;
+  } catch (error) {
+    return thunkApi.rejectWithValue(
+      error.response?.data?.message || "Session expired, please login again."
+    );
+  }
+});
 
 // ================================
 
