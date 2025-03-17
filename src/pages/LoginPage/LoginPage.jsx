@@ -1,13 +1,18 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import { useDispatch } from "react-redux";
 
-import { signIn } from "../../services/api";
+// import { signIn } from "../../services/api";
+
+import { signIn } from "../../redux/auth/operations";
 import { SignInValidationSchema } from "../../services/validationSchema";
 
 import styles from "./LoginPage.module.css";
 
+
 const LoginPage = () => {
+  const dispatch = useDispatch()
   const navigate = useNavigate();
   const [error, setError] = useState("");
 
@@ -18,14 +23,16 @@ const LoginPage = () => {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      const response = await signIn(values);
-      localStorage.setItem("token", response.data.data.token);
+      const response = await dispatch(signIn(values)).unwrap();
+      localStorage.setItem("token", response.token);
       navigate("/map");
     } catch (error) {
-      setError(error.response?.data?.message || "Invalid credentials");
+      setError(error || "Invalid credentials");
+    } finally {
+      setSubmitting(false);
     }
-    setSubmitting(false);
   };
+
   return (
     <div className={styles.container}>
       <h2>Login</h2>
@@ -59,7 +66,7 @@ const LoginPage = () => {
         )}
       </Formik>
       <p>
-        Don't have an account? <a href="/register">Register</a>
+        Don't have an account? <Link to="/register">Register</Link>
       </p>
     </div>
   );
