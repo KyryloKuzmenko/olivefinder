@@ -15,8 +15,8 @@ import axios from "axios";
 //     return axios.post(`${API_URL}/sign-in`, credentials);
 // };
 
-const API_OLIVES_URL = "http://localhost:5500/api/v1/olives";
-// const API_OLIVES_URL = "https://olive-api.onrender.com/api/v1/olives";
+// const API_OLIVES_URL = "http://localhost:5500/api/v1/olives";
+const API_OLIVES_URL = "https://olive-api.onrender.com/api/v1/olives";
 
 
 axios.defaults.withCredentials = true;
