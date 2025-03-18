@@ -11,17 +11,16 @@ export const signUp = createAsyncThunk(
   async (userData, thunkApi) => {
     try {
       const response = await axios.post(`${API_URL}/sign-up`, userData);
-
       return response.data.data;
     } catch (error) {
       return thunkApi.rejectWithValue(
-        error.response?.data?.message || "Something went wrong. Please try again."
+        error.response?.data?.message ||
+          "Something went wrong. Please try again."
       );
     }
   }
 );
 // ==============================
-
 
 // login user
 export const signIn = createAsyncThunk(
@@ -32,42 +31,52 @@ export const signIn = createAsyncThunk(
       return response.data.data;
     } catch (error) {
       return thunkApi.rejectWithValue(
-        error.response?.data?.message || "Something went wrong. Please try again."
+        error.response?.data?.message ||
+          "Something went wrong. Please try again."
       );
     }
   }
 );
 // ================================
 
-
 // =====sign-out=====
 
-export const signOut = createAsyncThunk("auth/sign-out", async (_, thunkApi) => {
-  try {
-    await axios.post(`${API_URL}/sign-out`);
-    return null;
-  } catch (error) {
-    return thunkApi.rejectWithValue(
+export const signOut = createAsyncThunk(
+  "auth/sign-out",
+  async (_, thunkApi) => {
+    try {
+      await axios.post(`${API_URL}/sign-out`);
+      return null;
+    } catch (error) {
+      return thunkApi.rejectWithValue(
         error.response?.data?.message || "Logout failed. Try again"
       );
+    }
   }
-})
+);
 
 // ================================
 
-
 // refresh
 
-export const refresh = createAsyncThunk("auth/refreshUser", async (_, thunkApi) => {
-  try {
-    const response = await axios.get(`${API_URL}/refresh`);
-    return response.data.data;
-  } catch (error) {
-    return thunkApi.rejectWithValue(
-      error.response?.data?.message || "Session expired, please login again."
-    );
+export const refresh = createAsyncThunk(
+  "auth/refreshUser",
+  async (_, thunkApi) => {
+    try {
+      const response = await axios.get(`${API_URL}/refresh`);
+
+      if (!response.data?.data?.user) {
+        return thunkApi.rejectWithValue("Session expired, please login again.");
+      }
+      return response.data;
+    } catch (error) {
+      console.error("Refresh error:", error.response?.data || error.message);
+      return thunkApi.rejectWithValue(
+        error.response?.data?.message || "Session expired, please login again."
+      );
+    }
   }
-});
+);
 
 // ================================
 

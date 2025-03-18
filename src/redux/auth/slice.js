@@ -45,14 +45,12 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(refresh.fulfilled, (state, action) => {
-        console.log("refresh fulfilled payload:", action.payload);
-        state.user = action.payload.user;
         state.isRefreshing = false;
-        console.log("New user in state:", state.user);
+        state.user = action.payload?.data?.user || null;
       })
       .addCase(refresh.rejected, (state, action) => {
-        state.error = action.payload;
         state.isRefreshing = false;
+        state.error = action.payload;
       }),
 });
 

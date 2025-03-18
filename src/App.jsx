@@ -7,7 +7,7 @@ import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 
 import "./App.css";
 import { useDispatch, useSelector } from "react-redux";
-import { selectIsRefreshing } from "./redux/auth/selectors";
+import { selectAuthUser, selectIsRefreshing } from "./redux/auth/selectors";
 import { useEffect } from "react";
 import { refresh } from "./redux/auth/operations";
 
@@ -19,8 +19,10 @@ function App() {
     dispatch(refresh());
   }, [dispatch]);
 
+  // console.log("App is rendering:", { isRefreshing });
+
   if (isRefreshing) {
-    return <p>Loading...</p>; // Показываем загрузку, пока идёт рефреш
+    return <p>Loading...</p>; 
   }
 
   return (
