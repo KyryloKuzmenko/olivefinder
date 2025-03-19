@@ -10,7 +10,9 @@ export const signUp = createAsyncThunk(
   "auth/signup",
   async (userData, thunkApi) => {
     try {
-      const response = await axios.post(`${API_URL}/sign-up`, userData);
+      const response = await axios.post(`${API_URL}/sign-up`, userData, {
+        withCredentials: true, // ОБЯЗАТЕЛЬНО
+      });
       return response.data.data;
     } catch (error) {
       return thunkApi.rejectWithValue(
@@ -27,7 +29,9 @@ export const signIn = createAsyncThunk(
   "auth/signin",
   async (userData, thunkApi) => {
     try {
-      const response = await axios.post(`${API_URL}/sign-in`, userData);
+      const response = await axios.post(`${API_URL}/sign-in`, userData, {
+        withCredentials: true, // ОБЯЗАТЕЛЬНО
+      });
       return response.data.data;
     } catch (error) {
       return thunkApi.rejectWithValue(
@@ -45,7 +49,13 @@ export const signOut = createAsyncThunk(
   "auth/sign-out",
   async (_, thunkApi) => {
     try {
-      await axios.post(`${API_URL}/sign-out`);
+      await axios.post(
+        `${API_URL}/sign-out`,
+        {},
+        {
+          withCredentials: true, // ОБЯЗАТЕЛЬНО
+        }
+      );
       return null;
     } catch (error) {
       return thunkApi.rejectWithValue(
@@ -63,7 +73,9 @@ export const refresh = createAsyncThunk(
   "auth/refreshUser",
   async (_, thunkApi) => {
     try {
-      const response = await axios.get(`${API_URL}/refresh`);
+      const response = await axios.get(`${API_URL}/refresh`, {
+        withCredentials: true, // ОБЯЗАТЕЛЬНО
+      });
 
       if (!response.data?.data?.user) {
         return thunkApi.rejectWithValue("Session expired, please login again.");
